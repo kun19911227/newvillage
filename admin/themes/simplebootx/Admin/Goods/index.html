@@ -1,0 +1,110 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('goods/index')}">商品管理</a></li>
+			<li><a href="{:U('goods/add')}">添加商品</a></li>
+			<li><a href="javascript:open_iframe_dialog('{:U('goods/goods_upload')}')">批量导入</a></li>
+			<li><a href="{:U('goods/account')}">结账</a></li>
+		</ul>
+		<form class="well form-search" method="post" id="cid-form" >
+			<input type="text" name="keyword" style="width: 200px;" value="{$keyword}" placeholder="请输入商品信息">
+			<button class="btn btn-primary">搜索</button>
+			<a class="btn btn-danger" href="{:U('goods/index')}">清空</a>
+		</form>
+		<form class="js-ajax-form" method="post">
+			<div class="table-actions">
+				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/listorders')}">排序</button>
+				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/toggle',array('hide'=>1))}" data-subcheck="true">隐藏</button>
+				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/toggle',array('display'=>1))}" data-subcheck="true">显示</button>
+				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('goods/delete')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">删除</button>
+			</div>
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+						<th width="50">排序</th>
+						<th width="50">ID</th>
+						<th width="200">条形码</th>
+						<th width="200">商品名称</th>
+						<th width="100">商品规格</th>
+						<th width="100">商品售价（元）</th>
+						<th width="100">缩略图</th>
+						<th width="100">发布时间</th>
+						<th width="50">状态</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<foreach name="list" item="vo">
+				<tr>
+					<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
+					<td><input name='listorders[{$vo.id}]' class="input input-order mr5" type='text' size='3' value='{$vo.listorder}'></td>
+					<td>{$vo.id}</td>
+					<td>{$vo.barcode}</td>
+					<td>{$vo.name}</td>
+					<td>{$vo.norms}</td>
+					<td>{$vo.s_price}</td>
+					<td>
+						<notempty name="vo.goods_pic">
+							<a href="javascript:parent.image_preview_dialog('{:sp_get_image_preview_url($vo['goods_pic'])}');">
+								<i class="fa fa-photo fa-fw"></i>
+							</a>
+						</notempty>
+					</td>
+					<td>{$vo.modify_time}</td>
+					<td><?php echo $vo['status'] ? '<span style="color:green;">显示</span>' : '<span style="color:red;">隐藏</span>'; ?></td>
+					<td>
+						<a href="{:U('goods/edit',array('id'=>$vo['id']))}">{:L('EDIT')}</a>
+						<a href="{:U('goods/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:L('DELETE')}</a>
+						<if condition="empty($vo['status']) eq 1">
+							<a href="{:U('goods/cancelban',array('id'=>$vo['id']))}" class="js-ajax-dialog-btn" data-msg="确定显示吗？">{:L('DISPLAY')}</a>
+						<else /> 
+							<a href="{:U('goods/ban',array('id'=>$vo['id']))}" class="js-ajax-dialog-btn" data-msg="确定隐藏吗？">{:L('HIDE')}</a>
+						</if>
+						<br />
+					</td>
+				</tr>
+				</foreach>
+				<tfoot>
+					<tr>
+						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+						<th width="50">排序</th>
+						<th width="50">ID</th>
+						<th width="200">条形码</th>
+						<th width="200">商品名称</th>
+						<th width="50">商品规格</th>
+						<th width="50">商品售价（元）</th>
+						<th width="50">缩略图</th>
+						<th width="200">发布时间</th>
+						<th width="50">状态</th>
+						<th width="100">操作</th>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="table-actions">
+				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('goods/delete')}" data-subcheck="true" data-msg="你确定删除吗？">{:L('DELETE')}</button>
+			</div>
+			<div class="pagination">{$page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		setCookie('refersh_time', 0);
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location.reload();
+			}
+		}
+		setInterval(function() {
+			refersh_window()
+		}, 2000);
+		$(function() {
+			$("#selected-cid").change(function() {
+				$("#cid-form").submit();
+			});
+		});
+	</script>
+</body>
+</html>

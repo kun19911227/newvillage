@@ -1,0 +1,79 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('goods/index')}">商品管理</a></li>
+			<li><a href="{:U('goods/add')}">添加商品</a></li>
+			<li><a href="javascript:open_iframe_dialog('{:U('goods/goods_upload')}')">批量导入</a></li>
+			<li class="active"><a href="{:U('goods/account')}">结账</a></li>
+		</ul>
+		<form method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+			<div class="row-fluid">
+				<div class="span9">
+					<table class="table table-bordered">
+						<tr>
+							<th width="80">条形码</th>
+							<td>
+								<input type="text" style="width: 200px;" name="barcode" id="barcode" value="" placeholder="请扫描或输入条形码"/>
+							</td>
+							<th width="80">总计(元)：</th>
+							<td>
+								<input type="text" style="width: 200px;height:50px;color:red;font-size:50px;font-weight:bold;" name="total" id="total" value="0.00" readonly/>
+							</td>
+						</tr>
+						
+						<tr>
+							<th>账单</th>
+							<td colspan="3"><textarea name="account" id="account" style='width: 98%; height: 500px; font-weight:bold;font-size:24px;line-height:1.5;color:blue;' readonly></textarea></td>
+						</tr>
+						<tr>
+						
+					</table>
+				</div>
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary js-ajax-submit" type="submit">结算</button>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			//鼠标光标默认在条形码框
+			$("#barcode").focus();
+			//点击回车触发事件
+			var count = 0;
+			$('#barcode').keydown(function(e){
+				if(e.keyCode==13){
+					e.preventDefault();//取消条形码框回车提交表单
+					var barcode=$("#barcode").val();
+					$.post('{:U("goods/getGoods")}', {barcode: barcode}, function(data){
+						if(data.s_price == null) {
+							alert("商品库中未找到此商品的价格信息！");
+							$("#barcode").val("");
+						} else {
+							//账单
+							count++;
+							var account = $("#account").val();
+							var str = count + ".  " + data.name + "    " + data.norms + "    ￥" + data.s_price +"\r\n";
+							account += str;
+							$("#account").val(account);
+							//总计
+							var total =  parseFloat($("#total").val());
+							//alert(total);
+							total += parseFloat(data.s_price);
+							$("#total").val(total);
+							//清除barcode
+							$("#barcode").val("");
+						}
+						
+					}); 
+				}
+			});
+		});
+	</script>
+</body>
+</html>

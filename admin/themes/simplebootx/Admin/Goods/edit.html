@@ -6,7 +6,6 @@
 			<li><a href="{:U('goods/index')}">商品管理</a></li>
 			<li><a href="{:U('goods/add')}">添加商品</a></li>
 			<li><a href="javascript:open_iframe_dialog('{:U('goods/goods_upload')}')">批量导入</a></li>
-			<li><a href="{:U('goods/account')}">结账</a></li>
 			<li class="active"><a href="#">编辑商品</a></li>
 		</ul>
 		<form method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
@@ -37,7 +36,6 @@
 							<th width="100">商品进价（元）</th>
 							<td>
 								<input type="text" style="width: 280px;" id="p_price" name="p_price" value="{$p_price}" placeholder="请输入商品进价"/>
-								<span class="form-required" style="color:red;"> *</span>
 							</td>
 							<th width="100">商品售价（元）</th>
 							<td>
@@ -88,8 +86,8 @@
 									$status_yes=$status==1?"checked":"";
 									$status_no=$status==0?"checked":"";
 								</php>
-								<label class="radio"><input type="radio" name="status" value="1" {$status_yes}>审核通过</label>
-								<label class="radio"><input type="radio" name="status" value="0" {$status_no}>待审核</label>
+								<label class="radio"><input type="radio" name="status" value="1" {$status_yes}>显示</label>
+								<label class="radio"><input type="radio" name="status" value="0" {$status_no}>隐藏</label>
 							</td>
 						</tr>
 					</table>
@@ -195,7 +193,6 @@
 						'barcode' : { required : 1 },
 						'name' : { required : 1 },
 						'norms' : { required : 1 },
-						'p_price' : { required : 1 },
 						's_price' : { required : 1 }
 					},
 					//验证未通过提示消息
@@ -203,7 +200,6 @@
 						'barcode' : { required : '请输入条形码' },
 						'name' : { required : '请输入商品名称' },
 						'norms' : { required : '请输入商品规格' },
-						'p_price' : { required : '请输入商品进价' },
 						's_price' : { required : '请输入商品售价' }
 					},
 					//给未通过验证的元素加效果,闪烁等
@@ -231,14 +227,23 @@
 											background : "#CCCCCC",
 											opacity : 0,
 											content : data.info,
-											button : [ {
-												name : '确定',
-												callback : function() {
-													reloadPage(window);
-													return true;
+											button : [
+												{
+													name : '继续编辑？',
+													callback : function() {
+														reloadPage(window);
+														return true;
+													},
+													focus : true
 												},
-												focus : true
-											} ]
+												{
+													name : '返回列表',
+													callback : function() {
+														location.href = "{:U('goods/index')}";
+														return true;
+													}
+												}
+											]
 										});
 									});
 								} else {

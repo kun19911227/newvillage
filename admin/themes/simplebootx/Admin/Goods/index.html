@@ -6,16 +6,25 @@
 			<li class="active"><a href="{:U('goods/index')}">商品管理</a></li>
 			<li><a href="{:U('goods/add')}">添加商品</a></li>
 			<li><a href="javascript:open_iframe_dialog('{:U('goods/goods_upload')}')">批量导入</a></li>
-			<li><a href="{:U('goods/account')}">结账</a></li>
 		</ul>
 		<form class="well form-search" method="post" id="cid-form" >
-			<input type="text" name="keyword" style="width: 200px;" value="{$keyword}" placeholder="请输入商品信息">
+			<php>$display = "";</php>
+			<notempty name="status">
+				<php>$display = "selected";</php>
+			</notempty>
+			分类： 
+			<select name="status" style="width: 120px;">
+				<option value=''>全部</option>
+				<option value='1' {$display}>显示</option>
+			</select> &nbsp;&nbsp;
+			关键字： 
+			<input type="text" name="keyword" style="width: 200px;" value="{$keyword}" placeholder="条形码/商品名称">
 			<button class="btn btn-primary">搜索</button>
 			<a class="btn btn-danger" href="{:U('goods/index')}">清空</a>
 		</form>
 		<form class="js-ajax-form" method="post">
 			<div class="table-actions">
-				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/listorders')}">排序</button>
+				<!-- <button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/listorders')}">排序</button> -->
 				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/toggle',array('hide'=>1))}" data-subcheck="true">隐藏</button>
 				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/toggle',array('display'=>1))}" data-subcheck="true">显示</button>
 				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('goods/delete')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">删除</button>
@@ -24,7 +33,7 @@
 				<thead>
 					<tr>
 						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
-						<th width="50">排序</th>
+						<!-- <th width="50">排序</th> -->
 						<th width="50">ID</th>
 						<th width="200">条形码</th>
 						<th width="200">商品名称</th>
@@ -39,7 +48,7 @@
 				<foreach name="list" item="vo">
 				<tr>
 					<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
-					<td><input name='listorders[{$vo.id}]' class="input input-order mr5" type='text' size='3' value='{$vo.listorder}'></td>
+					<!-- <td><input name='listorders[{$vo.id}]' class="input input-order mr5" type='text' size='3' value='{$vo.listorder}'></td> -->
 					<td>{$vo.id}</td>
 					<td>{$vo.barcode}</td>
 					<td>{$vo.name}</td>
@@ -57,11 +66,11 @@
 					<td>
 						<a href="{:U('goods/edit',array('id'=>$vo['id']))}">{:L('EDIT')}</a>
 						<a href="{:U('goods/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:L('DELETE')}</a>
-						<if condition="empty($vo['status']) eq 1">
+						<!-- <if condition="empty($vo['status']) eq 1">
 							<a href="{:U('goods/cancelban',array('id'=>$vo['id']))}" class="js-ajax-dialog-btn" data-msg="确定显示吗？">{:L('DISPLAY')}</a>
 						<else /> 
 							<a href="{:U('goods/ban',array('id'=>$vo['id']))}" class="js-ajax-dialog-btn" data-msg="确定隐藏吗？">{:L('HIDE')}</a>
-						</if>
+						</if> -->
 						<br />
 					</td>
 				</tr>
@@ -69,7 +78,7 @@
 				<tfoot>
 					<tr>
 						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
-						<th width="50">排序</th>
+						<!-- <th width="50">排序</th> -->
 						<th width="50">ID</th>
 						<th width="200">条形码</th>
 						<th width="200">商品名称</th>
@@ -83,7 +92,10 @@
 				</tfoot>
 			</table>
 			<div class="table-actions">
-				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('goods/delete')}" data-subcheck="true" data-msg="你确定删除吗？">{:L('DELETE')}</button>
+				<!-- <button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/listorders')}">排序</button> -->
+				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/toggle',array('hide'=>1))}" data-subcheck="true">隐藏</button>
+				<button class="btn btn-primary btn-small js-ajax-submit" type="submit" data-action="{:U('goods/toggle',array('display'=>1))}" data-subcheck="true">显示</button>
+				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('goods/delete')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">删除</button>
 			</div>
 			<div class="pagination">{$page}</div>
 		</form>

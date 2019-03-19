@@ -19,15 +19,15 @@ class GoodsController extends AdminbaseController {
 	}
 
 	function index() {
+		$status = trim($_POST['status'])  ;
 		$keyword = trim( $_POST['keyword'] );
-
+		
+		$this->assign('status',$status);
 		$this->assign( 'keyword', $keyword );
-		//select * from cmf_goods where 1=1 and (name like "%%" or barcode like "%%") order by listorder asc
 		$where = array();
+		if ($status) $where['status'] = (int)$status;
 		if ( !empty($keyword) ) {
-			$where['name'] = array('like',"%$keyword%",'and');
-			$where['barcode'] = array('like',"%$keyword%",'and');
-			$where[_logic] = 'or';
+			$where['name|barcode'] = array('like',"%$keyword%");
 		}
 		$count = $this->gdl->where($where)->count();
 		$page = $this->page($count, 20);
@@ -207,7 +207,7 @@ class GoodsController extends AdminbaseController {
 				$norms = trim( $sheet->getCell( 'B'.$i )->getValue() );
 				$barcode = trim( $sheet->getCell( 'C'.$i )->getValue() );
 
-				if ( empty( $name ) || empty( $norms ) || empty( $barcode ) ) continue;
+				if ( empty( $name ) || empty( $barcode ) ) continue;
 				$realRowCount++;
 				$importCount++;
 

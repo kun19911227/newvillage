@@ -3,9 +3,6 @@
 <body>
 	<div class="wrap js-check-wrap">
 		<ul class="nav nav-tabs">
-			<li><a href="{:U('goods/index')}">商品管理</a></li>
-			<li><a href="{:U('goods/add')}">添加商品</a></li>
-			<li><a href="javascript:open_iframe_dialog('{:U('goods/goods_upload')}')">批量导入</a></li>
 			<li class="active"><a href="{:U('goods/account')}">结账</a></li>
 		</ul>
 		<form method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
@@ -25,7 +22,7 @@
 						
 						<tr>
 							<th>账单</th>
-							<td colspan="3"><textarea name="account" id="account" style='width: 98%; height: 500px; font-weight:bold;font-size:24px;line-height:1.5;color:blue;' readonly></textarea></td>
+							<td colspan="3"><textarea name="account" id="account" style='width: 98%; height: 300px; font-weight:bold;font-size:24px;line-height:1.5;color:blue;' readonly></textarea></td>
 						</tr>
 						<tr>
 						
@@ -34,7 +31,7 @@
 			</div>
 			<div class="form-actions">
 				<button class="btn btn-primary js-ajax-submit" type="submit">结算</button>
-				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+				<!-- <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a> -->
 			</div>
 		</form>
 	</div>
